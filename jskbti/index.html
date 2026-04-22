@@ -80,6 +80,22 @@
                         </div>
                     </div>
 
+                    <div class="setup-section">
+                        <h3 class="setup-label">请选择答题方式</h3>
+                        <div class="setup-options">
+                            <button class="setup-btn" data-answer-mode="single" onclick="selectAnswerMode(this)">
+                                <span class="setup-icon">🔘</span>
+                                <span class="setup-name">单选</span>
+                                <span class="setup-desc">每道题只能选择一个答案</span>
+                            </button>
+                            <button class="setup-btn" data-answer-mode="multiple" onclick="selectAnswerMode(this)">
+                                <span class="setup-icon">🔄</span>
+                                <span class="setup-name">多选</span>
+                                <span class="setup-desc">每道题可以选择多个答案</span>
+                            </button>
+                        </div>
+                    </div>
+
                     <button class="btn-primary" id="start-test-btn" onclick="startTest()">
                         <span>开始探索</span>
                     </button>
@@ -151,6 +167,16 @@
                         <button class="btn-secondary small" onclick="goHome()">
                             <span>返回首页</span>
                         </button>
+                    </div>
+
+                    <div class="love-heart">
+                        <div class="heart-content">
+                            <span class="heart-name">邓宏锦</span>
+                            <span class="heart-name">金熙</span>
+                            <span class="heart-name">岳思语</span>
+                            <span class="heart-name">陈舒窈</span>
+                        </div>
+                        <p class="heart-text">谢谢你们出现在了我的世界里，我们因对方而完整。</p>
                     </div>
                 </div>
             </div>

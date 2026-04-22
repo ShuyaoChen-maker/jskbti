@@ -2,6 +2,7 @@ const ADMIN_PASSWORD = 'jskbti2024';
 
 let selectedMode = 'literary';
 let selectedType = 'single';
+let selectedAnswerMode = 'single';
 let currentQuestionIndex = 0;
 let answers = {};
 let isAdminLoggedIn = false;
@@ -493,9 +494,11 @@ function showPage(pageId) {
 function showPresetup() {
     selectedMode = 'literary';
     selectedType = 'single';
+    selectedAnswerMode = 'single';
     document.querySelectorAll('.setup-btn').forEach(btn => btn.classList.remove('selected'));
     document.querySelector('[data-mode="literary"]').classList.add('selected');
     document.querySelector('[data-type="single"]').classList.add('selected');
+    document.querySelector('[data-answer-mode="single"]').classList.add('selected');
     showPage('presetup-page');
 }
 
@@ -509,6 +512,12 @@ function selectType(btn) {
     document.querySelectorAll('[data-type]').forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
     selectedType = btn.dataset.type;
+}
+
+function selectAnswerMode(btn) {
+    document.querySelectorAll('[data-answer-mode]').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedAnswerMode = btn.dataset.answerMode;
 }
 
 function startTest() {
@@ -534,10 +543,13 @@ function renderQuestion() {
     const optionsContainer = document.getElementById('options');
     optionsContainer.innerHTML = '';
 
+    const currentAnswers = answers[currentQuestionIndex] || (selectedAnswerMode === 'multiple' ? [] : null);
+
     content.options.forEach((option, index) => {
         const label = String.fromCharCode(65 + index);
         const btn = document.createElement('button');
-        btn.className = 'option-card' + (answers[currentQuestionIndex] === label ? ' selected' : '');
+        const isSelected = selectedAnswerMode === 'multiple' ? currentAnswers.includes(label) : currentAnswers === label;
+        btn.className = 'option-card' + (isSelected ? ' selected' : '');
         btn.onclick = () => selectOption(label);
         btn.innerHTML = `
             <span class="option-letter">${label}</span>
@@ -557,7 +569,19 @@ function renderQuestion() {
 }
 
 function selectOption(option) {
-    answers[currentQuestionIndex] = option;
+    if (selectedAnswerMode === 'multiple') {
+        if (!answers[currentQuestionIndex]) {
+            answers[currentQuestionIndex] = [];
+        }
+        const index = answers[currentQuestionIndex].indexOf(option);
+        if (index > -1) {
+            answers[currentQuestionIndex].splice(index, 1);
+        } else {
+            answers[currentQuestionIndex].push(option);
+        }
+    } else {
+        answers[currentQuestionIndex] = option;
+    }
     renderQuestion();
 }
 
@@ -569,8 +593,14 @@ function prevQuestion() {
 }
 
 function nextQuestion() {
-    if (answers[currentQuestionIndex] === undefined) {
-        return;
+    if (selectedAnswerMode === 'multiple') {
+        if (!answers[currentQuestionIndex] || answers[currentQuestionIndex].length === 0) {
+            return;
+        }
+    } else {
+        if (answers[currentQuestionIndex] === undefined) {
+            return;
+        }
     }
 
     const questions = getQuestions();
@@ -590,14 +620,28 @@ function calculateResult() {
         const answer = answers[index];
         if (answer) {
             const content = question[selectedMode] || question.simple;
-            const optionIndex = answer.charCodeAt(0) - 65;
-            const option = content.options[optionIndex];
-            if (option && option.tendency) {
-                option.tendency.split('').forEach(char => {
-                    if (scores[char] !== undefined) {
-                        scores[char]++;
+            if (selectedAnswerMode === 'multiple') {
+                answer.forEach(selectedOption => {
+                    const optionIndex = selectedOption.charCodeAt(0) - 65;
+                    const option = content.options[optionIndex];
+                    if (option && option.tendency) {
+                        option.tendency.split('').forEach(char => {
+                            if (scores[char] !== undefined) {
+                                scores[char]++;
+                            }
+                        });
                     }
                 });
+            } else {
+                const optionIndex = answer.charCodeAt(0) - 65;
+                const option = content.options[optionIndex];
+                if (option && option.tendency) {
+                    option.tendency.split('').forEach(char => {
+                        if (scores[char] !== undefined) {
+                            scores[char]++;
+                        }
+                    });
+                }
             }
         }
     });
