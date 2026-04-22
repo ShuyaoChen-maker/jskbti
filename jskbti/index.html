@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSKB - 四人纪念测试</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="paper-texture"></div>
+
+    <main id="app">
+        <section id="home-page" class="page active">
+            <div class="container">
+                <div class="home-content">
+                    <div class="logo-container">
+                        <div class="logo-letters">
+                            <span class="logo-letter">J</span>
+                            <span class="logo-letter">S</span>
+                            <span class="logo-letter">K</span>
+                            <span class="logo-letter">B</span>
+                        </div>
+                        <p class="logo-sub">四人纪念测试</p>
+                    </div>
+                    <div class="home-desc">
+                        <p>在青春的坐标系里</p>
+                        <p>我们相遇、陪伴、成长</p>
+                        <p>四个灵魂，四种色彩</p>
+                        <p>你，会是哪一个？</p>
+                    </div>
+                    <button class="btn-primary" onclick="showPresetup()">
+                        <span>开始测试</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="presetup-page" class="page">
+            <div class="container">
+                <div class="presetup-card">
+                    <h2 class="presetup-title">选择测试模式</h2>
+                    
+                    <div class="setup-section">
+                        <h3 class="setup-label">请选择版本</h3>
+                        <div class="setup-options">
+                            <button class="setup-btn" data-mode="literary" onclick="selectMode(this)">
+                                <span class="setup-icon">🍃</span>
+                                <span class="setup-name">文艺版</span>
+                                <span class="setup-desc">诗意表达，意境悠远</span>
+                            </button>
+                            <button class="setup-btn" data-mode="simple" onclick="selectMode(this)">
+                                <span class="setup-icon">🌿</span>
+                                <span class="setup-name">简洁版</span>
+                                <span class="setup-desc">直抒胸臆，清晰明了</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="setup-section">
+                        <h3 class="setup-label">请选择类型</h3>
+                        <div class="setup-options">
+                            <button class="setup-btn" data-type="single" onclick="selectType(this)">
+                                <span class="setup-icon">🌟</span>
+                                <span class="setup-name">单人匹配</span>
+                                <span class="setup-desc">找到最像的那个人</span>
+                            </button>
+                            <button class="setup-btn" data-type="combo" onclick="selectType(this)">
+                                <span class="setup-icon">✨</span>
+                                <span class="setup-name">组合匹配</span>
+                                <span class="setup-desc">你是几个人的结合</span>
+                            </button>
+                            <button class="setup-btn" data-type="auto" onclick="selectType(this)">
+                                <span class="setup-icon">🌸</span>
+                                <span class="setup-name">两个都可以</span>
+                                <span class="setup-desc">不固定必须要最像的人或者组合</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" id="start-test-btn" onclick="startTest()">
+                        <span>开始探索</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="test-page" class="page">
+            <div class="container">
+                <div class="test-header">
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <span class="progress-text" id="progress-text">1 / 25</span>
+                    </div>
+                    <div class="question-category" id="question-category">情感</div>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-number">第 <span id="current-num">1</span> 题</div>
+                    <h2 class="question-text" id="question-text"></h2>
+                    <div class="options-container" id="options"></div>
+                </div>
+
+                <div class="test-nav">
+                    <button class="btn-nav" id="prev-btn" onclick="prevQuestion()">
+                        <span>上一题</span>
+                    </button>
+                    <button class="btn-nav primary" id="next-btn" onclick="nextQuestion()">
+                        <span id="next-text">下一题</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="result-page" class="page">
+            <div class="container">
+                <div class="result-card">
+                    <div class="result-header">
+                        <h2 class="result-title">灵魂的模样</h2>
+                        <p class="result-subtitle">你与时光交织的独特印记</p>
+                        <div class="result-names" id="result-names"></div>
+                    </div>
+                    
+                    <div class="result-analysis">
+                        <div class="analysis-section">
+                            <h3 class="analysis-title">性格底色</h3>
+                            <p class="analysis-text" id="result-background"></p>
+                        </div>
+                        <div class="analysis-section">
+                            <h3 class="analysis-title">情感态度</h3>
+                            <p class="analysis-text" id="result-emotion"></p>
+                        </div>
+                        <div class="analysis-section">
+                            <h3 class="analysis-title">人生态度</h3>
+                            <p class="analysis-text" id="result-life"></p>
+                        </div>
+                        <div class="analysis-section">
+                            <h3 class="analysis-title">纪念时刻</h3>
+                            <div class="memory-tags" id="memory-tags"></div>
+                        </div>
+                    </div>
+
+                    <div class="result-actions">
+                        <button class="btn-primary small" onclick="restartTest()">
+                            <span>再测一次</span>
+                        </button>
+                        <button class="btn-secondary small" onclick="goHome()">
+                            <span>返回首页</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="admin-login-page" class="page">
+            <div class="container">
+                <div class="admin-box">
+                    <h2 class="admin-title">管理入口</h2>
+                    <input type="password" id="admin-password" class="input-field" placeholder="请输入管理密码">
+                    <p id="login-error" class="error-msg"></p>
+                    <div class="admin-btns">
+                        <button class="btn-admin" onclick="checkAdminPassword()">进入</button>
+                        <button class="btn-back" onclick="goHome()">返回</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="admin-page" class="page">
+            <div class="container">
+                <div class="admin-header">
+                    <h2 class="admin-title">题目管理</h2>
+                    <div class="admin-actions">
+                        <button class="btn-add" onclick="showAddQuestionForm()">+ 新增题目</button>
+                        <button class="btn-back small" onclick="logoutAdmin()">退出</button>
+                    </div>
+                </div>
+
+                <div id="question-form" class="form-box hidden">
+                    <h3 id="form-title">新增题目</h3>
+                    <div class="form-group">
+                        <label>题目类型</label>
+                        <select id="question-category" class="input-field">
+                            <option value="EMOTION">情感</option>
+                            <option value="LIFE">人生</option>
+                            <option value="FRIENDSHIP">友情</option>
+                            <option value="MEMORY">回忆</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>题目内容（文艺版）</label>
+                        <textarea id="question-content-literary" class="input-area" placeholder="请输入文艺版题目..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>题目内容（简洁版）</label>
+                        <textarea id="question-content-simple" class="input-area" placeholder="请输入简洁版题目..."></textarea>
+                    </div>
+                    <div class="options-group">
+                        <label>选项设置</label>
+                        <div class="option-inputs" id="option-inputs">
+                            <div class="option-input-row">
+                                <input type="text" class="input-field option-text" placeholder="文艺版选项A">
+                                <input type="text" class="input-field option-text-simple" placeholder="简洁版选项A">
+                                <select class="input-field option-match">
+                                    <option value="A">邓宏锦</option>
+                                    <option value="B">金熙</option>
+                                    <option value="C">岳思语</option>
+                                    <option value="D">陈舒窈</option>
+                                </select>
+                                <button class="btn-remove-option" onclick="removeOptionInput(this)">×</button>
+                            </div>
+                            <div class="option-input-row">
+                                <input type="text" class="input-field option-text" placeholder="文艺版选项B">
+                                <input type="text" class="input-field option-text-simple" placeholder="简洁版选项B">
+                                <select class="input-field option-match">
+                                    <option value="A">邓宏锦</option>
+                                    <option value="B">金熙</option>
+                                    <option value="C">岳思语</option>
+                                    <option value="D">陈舒窈</option>
+                                </select>
+                                <button class="btn-remove-option" onclick="removeOptionInput(this)">×</button>
+                            </div>
+                        </div>
+                        <button class="btn-add-option" onclick="addOptionInput()">+ 添加选项</button>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn-save" onclick="saveQuestion()">保存</button>
+                        <button class="btn-cancel" onclick="hideQuestionForm()">取消</button>
+                    </div>
+                </div>
+
+                <div class="question-list" id="question-list"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <span class="footer-text">jskbti.com</span>
+            <button class="btn-admin-link" onclick="showAdminLogin()">管理</button>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
